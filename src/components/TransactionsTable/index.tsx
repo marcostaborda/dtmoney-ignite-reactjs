@@ -7,8 +7,8 @@ export function TransactionsTable() {
     api.get('transactions').then(res => {
       console.log(res.data)
     });
-  },[])
-  return ( 
+  }, [])
+  return (
     <Container>
       <table>
         <thead>
@@ -30,7 +30,7 @@ export function TransactionsTable() {
 
           <tr>
             <td className="title-table">Aluguel</td>
-            <td className="with-draw"> - R$ 12.000</td>
+            <td className="withdraw"> - R$ 12.000</td>
             <td>Casa</td>
             <td>10/02/2021</td>
           </tr>
