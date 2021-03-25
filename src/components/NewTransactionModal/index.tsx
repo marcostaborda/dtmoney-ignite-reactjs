@@ -1,4 +1,6 @@
+import { FormEvent, useState } from 'react';
 import Modal from 'react-modal';
+import { api } from '../../services/api';
 import {
   Container,
   ButtonCloseModal,
@@ -8,7 +10,6 @@ import {
 import closeImg from '../../assets/close.svg';
 import incomeImg from '../../assets/income.svg';
 import outcomeImg from '../../assets/outcome.svg';
-import { useState } from 'react';
 
 interface NewTransactionModalProps {
   onCloseRequestModal: () => void;
@@ -19,6 +20,22 @@ Modal.setAppElement("#root");
 
 export function NewTransactionModal({ isOpenModal, onCloseRequestModal }: NewTransactionModalProps) {
   const [type, setType] = useState('deposit');
+  const [title, setTitle] = useState('');
+  const [category, setCategory] = useState('');
+  const [value, setValue] = useState(0);
+
+  function handleCreateNewTransaction(event: FormEvent) {
+    event.preventDefault();
+
+    const data = {
+      title,
+      category,
+      value,
+      type
+    }
+
+    api.post('/transactions', data);
+  }
 
   return (
     <Modal
@@ -30,10 +47,20 @@ export function NewTransactionModal({ isOpenModal, onCloseRequestModal }: NewTra
       <ButtonCloseModal type="button" onClick={onCloseRequestModal} className="button-close-react-modal">
         <img src={closeImg} alt="Sair do modal" />
       </ButtonCloseModal>
-      <Container>
+      <Container onSubmit={handleCreateNewTransaction}>
         <h2>Cadastrar Transação</h2>
-        <input type="text" placeholder="Título" />
-        <input type="text" placeholder="Valor" />
+        <input
+          type="text"
+          placeholder="Título"
+          value={title}
+          onChange={event => setTitle(event.target.value)}
+        />
+        <input
+          type="number"
+          placeholder="Valor"
+          value={value}
+          onChange={event => setValue(Number(event.target.value))}
+        />
 
         <TransactionTypeContainer>
           <RadioBox
@@ -56,7 +83,12 @@ export function NewTransactionModal({ isOpenModal, onCloseRequestModal }: NewTra
           </RadioBox>
         </TransactionTypeContainer>
 
-        <input type="text" placeholder="Categoria" />
+        <input
+          type="text"
+          placeholder="Categoria"
+          value={category}
+          onChange={event => setCategory(event.target.value)}
+        />
         <button type="submit">
           Cadastrar
         </button>
