@@ -4,9 +4,8 @@ import { createServer, Model } from 'miragejs';
 import App from './App';
 
 createServer({
-
   models: {
-    transactions: Model,
+    transaction: Model,
   },
 
   seeds(server) {
@@ -17,7 +16,7 @@ createServer({
           title: 'Freelance de Website',
           type: 'deposit',
           category: 'Dev',
-          value: 6000,
+          amount: 6000,
           createdAt: new Date('2021-02-12 09:00:00')
         },
         {
@@ -25,7 +24,7 @@ createServer({
           title: 'Aluguel',
           type: 'withdraw',
           category: 'Casa',
-          value: 1200,
+          amount: 1200,
           createdAt: new Date('2021-02-13 11:00:00')
         }
       ]
@@ -33,16 +32,16 @@ createServer({
   },
 
   routes() {
-    this.namespace = 'api';
-
-    this.get('/transactions', () => {
-      return this.schema.all('transactions');
-    })
+    this.namespace = 'api'
 
     this.post('/transactions', (schema, request) => {
-      const data = JSON.parse(request.requestBody);
+      let data = JSON.parse(request.requestBody)
 
-      return schema.create('transaction', data);
+      return schema.create('transaction', data)
+    })
+
+    this.get('/transactions', () => {
+      return this.schema.all('transaction');
     })
   }
 })

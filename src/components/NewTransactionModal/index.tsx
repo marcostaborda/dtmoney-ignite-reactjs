@@ -1,6 +1,5 @@
 import { FormEvent, useContext, useState } from 'react';
 import Modal from 'react-modal';
-import { api } from '../../services/api';
 import {
   Container,
   ButtonCloseModal,
@@ -23,20 +22,27 @@ Modal.setAppElement("#root");
 export function NewTransactionModal({ isOpenModal, onCloseRequestModal }: NewTransactionModalProps) {
   const { createTransaction } = useContext(TransactionsContext)
 
-  const [type, setType] = useState('deposit');
-  const [title, setTitle] = useState('');
-  const [category, setCategory] = useState('');
-  const [value, setValue] = useState(0);
+  const [type, setType] = useState('deposit')
+  const [title, setTitle] = useState('')
+  const [category, setCategory] = useState('')
+  const [amount, setAmount] = useState(0)
 
-  function handleCreateNewTransaction(event: FormEvent) {
+  async function handleCreateNewTransaction(event: FormEvent) {
     event.preventDefault()
 
-    createTransaction({
+    await createTransaction({
       title,
       category,
-      value,
+      amount,
       type
     })
+
+    setTitle('')
+    setCategory('')
+    setAmount(0)
+    setType('deposit')
+
+    onCloseRequestModal()
   }
 
   return (
@@ -60,8 +66,8 @@ export function NewTransactionModal({ isOpenModal, onCloseRequestModal }: NewTra
         <input
           type="number"
           placeholder="Valor"
-          value={value}
-          onChange={event => setValue(Number(event.target.value))}
+          value={amount}
+          onChange={event => setAmount(Number(event.target.value))}
         />
 
         <TransactionTypeContainer>
